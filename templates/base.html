@@ -1,0 +1,253 @@
+<? xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+    <title>{% block title  %}FiestaLenda {% endblock  %}</title>
+    
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript" charset="utf-8"></script> 
+     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script> 
+<script type="text/javascript">
+  $(function(){
+    $('#id_event_start_date').datetime({ value: '+1min' });
+  });
+</script>
+<script type="text/javascript">
+
+function limitText(limitField, limitCount, limitNum) {
+	if (limitField.value.length > limitNum) {
+		limitField.value = limitField.value.substring(0, limitNum);
+	} else {
+		limitCount.value = limitNum - limitField.value.length;
+	}
+}
+
+
+function closeDisplay(n)    
+{
+    if (n){
+    document.getElementById('prev').style.display='none';   
+    }
+}   
+
+function addEndDate()
+{
+    document.getElementById('end_date').style.display='block';
+    document.getElementById('end_label').style.display='block';
+}
+
+
+function displayImage()
+{
+                var el=document.getElementById('prev');
+                var windowWidth = document.documentElement.clientWidth;
+                var windowHeight = document.documentElement.clientHeight;
+                var popupWidth = $("#prev").width();
+                var popupHeight = $("#prev").height();
+                    $("#prev").css({  
+                    "position": "absolute",  
+                    "top": windowHeight/2-popupHeight/2,  
+                    "left": windowWidth/2-popupWidth/2  
+});  
+                document.getElementById('prev').style.display='block';
+                //var imageDisplay = document.getElementById('prev');
+                //imageDisplay.innerHTML = <a>YES</a> + detailimage;
+} //EndFunction displayImage
+
+</script>
+
+<style type="text/css" media="screen">
+    
+body{
+      font-size: 9pt;font-family: "Myriad Web",Verdana, Helvetica, Arial, sans-serif;background:#e1e1e2;
+      background: url("/media/images/bgradient4.jpg") repeat-x; 
+      text-align:center;
+  }
+
+
+  #eventcode{
+    background: #728FCE; 
+}
+#todaycode{
+background: #90EE90; 
+}
+#todayeventcode{
+background: yellow; 
+}
+
+#prev
+{
+border: 2px solid black;
+padding:10px;
+overflow: auto;
+z-index: 1;
+width:800px;
+height:600px;
+display:none;
+position: absolute;
+background-color: rgb(255, 255, 255);
+text-align:center; 
+}
+
+#end_date
+{
+    display:none;
+}
+#end_label
+{
+    display:none;
+}
+#addme
+{
+    display:none;
+}
+
+
+#map
+{
+    width: 300px;
+    height: 300px;
+}
+
+.quickbutton{border:1px solid #006;background:#ccf; width:100px}
+.quickbutton:hover{border:1px solid #f00;background:#eef;}
+.otherquickbutton{border:1px solid #006;background:#ccf; width:50px}
+.otherquickbutton:hover{border:1px solid #f00;background:#eef;}
+.adimage{border:0;width:80px;height:80px;}
+.adimagepara{float:left;}
+.adbody{margin-left:90px;}
+.adclear{clear:both;}
+.subheadings{ background:#C0C0C0;text-align:center;margin-bottom:10px;font-weight:bold;}
+.eventheadings{font-weight:bold;}
+.centerdivs{text-align:center;}
+.centertables{margin-left:auto;margin-right:auto;}
+#container {
+	text-align: left;
+	margin: 0px auto;
+	padding: 0px;
+        border:0;
+	border: solid 1px #E3E4FA; 
+        width: 960px;
+        background: #FFFFFF;
+}
+
+#header {
+	margin: 0 0 0 0;
+      /*	background: yellow; */
+        /* border: solid gray; */ 
+}
+
+#menu{
+    height:20px;
+    padding: 10px;
+  /*  background:yellow;*/
+    /* border: solid gray; */ 
+}
+
+#leftcol {
+	float: left;
+	width: 150px;
+        /* border: solid 1px gray; */
+        padding: 10px;
+        word-wrap: break-word;    
+      /*  background: blue; */
+ /*   font-size: 9pt;font-family: "Myriad Web",Verdana, Helvetica, Arial, sans-serif; */
+}
+
+#rightcol {
+	float: right;
+     /*	width: 150px; */
+	width: 200px;
+        /* border: solid 1px gray; */
+        padding: 10px;
+        word-wrap: break-word;
+      /*  background: blue; */   
+}
+
+#middlecol { 
+	float: left;
+      /* width: 56%; */
+        /* width: 599px; */
+         width: 549px;
+         padding: 10px;
+        /* background: yellow;*/
+}
+
+#footer {
+	clear: both;
+        text-align: center;
+        /* border: solid gray; */
+}
+</style>
+
+
+{% block jscripts %} {% endblock %}
+
+</head>
+<body>
+
+<div id="container">
+   
+    <div id="header">
+
+        <!--<img  src="{{ media_url }}images/logo.jpg" border="0" />-->
+        <img  src="/media/images/logo.jpg" border="0" />
+
+           
+</div>
+<div id="menu">
+        {% if not user.is_authenticated %}    
+        <a href="{% url fiesta.views.main %} "> Home </a> | 
+        <a href="{% url fiesta.views.search %} "> Search </a> | 
+        <a href="/accounts/login/?next=/eventcal/manage/"> Login</a> | 
+        <a href="/accounts/register/"> Register </a> | 
+        
+        {% endif %}
+
+
+        {% if user.is_authenticated %}
+        Hi, {{ user }}
+    <a href="/accounts/logout/?next=/eventcal/main/">Log Out</a>
+    {% endif %}
+
+
+    {% block menu  %} 
+{% endblock %}
+
+</div>
+
+
+    <!-- Left Column  -->
+    
+    <div id="leftcol"> {% block leftcol  %} {% endblock  %}
+</div>
+
+    <!-- Middle Column  -->
+    
+    <div id="middlecol">
+    {% block  middlecol  %}
+    {% endblock %}
+</div>
+
+    <!-- Right Column  -->
+    
+    
+<div id="rightcol">
+    {% block  rightcol  %}
+    {% endblock %}
+    To advertise with us call: <br />
+    (876)883-9487 or (876)883-9487
+</div>
+<div id="footer">
+    <br />
+    <br />
+    <br />
+    <a href=''>Privacy</a> - <a href="{% url fiesta.views.contact %}">Contact Us</a> - <a href="">Terms and Conditions</a>    
+    <br />
+    &copy;2008 Fiestalenda
+</div>
+
+</div>
+</body>
+</html>

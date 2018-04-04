@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+
+
+{% block leftcol %}
+
+{% endblock %}
+
+
+
+{% block middlecol %}
+
+{% if search_results.object_list %}
+
+
+<h2>Search Results </h2>
+<br />
+{% for result in search_results.object_list %}
+<a href="{% url fiesta.views.detail result.event_start_date|date:"Y" result.event_start_date|date:"m" result.event_start_date|date:"d" result.pk %}">{{ result.title }}</a> 
+<br />
+{{ result.description }}
+<br />
+{{ result.event_start_date|date:"l"}}
+{{ result.event_start_date }} 
+<br />
+<hr>
+<br />
+{% endfor %}
+
+{% if  search_results.object_list and search_results.paginator.num_pages > 1 %}
+{% if search_results.has_previous %}
+<a href="?page={{ search_results.previous_page_number }}&amp;{{ queries.urlencode }}"> newer events &lt;&lt;</a>
+{% endif %}
+
+Page {{ search_results.number }} of {{ search_results.paginator.num_pages  }}
+
+{% if search_results.has_next %}
+<a href="?page={{search_results.next_page_number }}&amp;{{ queries.urlencode }} "> &gt;&gt; older events</a>
+{% endif %}
+
+
+{% endif %}
+
+
+
+{% else %}
+<p align="center">Sorry, but your search did not return any events.</p>
+
+{% endif %}
+
+
+
+
+
+{% endblock %}
+
+
+{% block rightcol %}
+<div class="subheadings">Fiesta Ads </div>
+{% for ad in ads_lst  %}
+<a href="{{ ad.url }}  ">{{ ad.title }}</a>
+<br />
+<p class="adimagepara"><img class="adimage" src="{{ media_url }}{{ ad.thumbnail2 }}" /> </p>
+ <p class="adbody">{{ ad.body }}</p>
+ <div class="adclear"><hr></div>
+{% endfor %}
+
+{% endblock %}
+
+
+
+

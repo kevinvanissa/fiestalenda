@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+
+{% block middlecol %}
+
+
+<a href="{% url fiesta.views.create_event %}">Add New Event</a>
+
+{{ new_event }}
+{% if events %}
+
+
+<h3>Current events for {{ user }} </h3>
+{% for event in events  %}
+<a href={% url fiesta.views.create_event_edit event.pk %}>Title: {{ event.title }} </a>
+<br />
+Description: {{ event.description }}
+<br />
+Event Start Date: {{ event.event_start_date }}
+<br />
+<hr>
+
+{% endfor %}
+
+{% else %}
+<p align="center">No Events for {{ user }} has been created as yet. </p>
+
+{% endif %}
+
+{% endblock %}
+
+

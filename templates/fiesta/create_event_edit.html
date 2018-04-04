@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+
+{% block leftcol %}
+<div class="subheadings"> Your Upcoming Events</div>
+{% for upcoming_event in upcoming_events   %}
+<a href="{% url fiesta.views.detail upcoming_event.event_start_date|date:"Y" upcoming_event.event_start_date|date:"m" upcoming_event.event_start_date|date:"d" upcoming_event.pk  %}" >{{ upcoming_event.title  }}</a> 
+<br />
+({{ upcoming_event.number_attending }} Attending)
+<br />
+{{ upcoming_event.event_start_date  }}
+<br />
+<hr>
+{% endfor %}
+
+{% endblock %}
+
+
+
+{% block middlecol %}
+<div align="center">
+    <form action="{% url fiesta.views.delete_event %}" method="POST"> {% csrf_token %}
+        <input type='submit' value="DELETE EVENT"> 
+        <input type='hidden' name='delete' value='{{ delete_key }}'>
+    
+    </form>
+    <br />
+    OR
+
+
+    <h2> Edit Event</h2>
+<table>
+<form action="{% url fiesta.views.add_event %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+    {{ form.as_table }}
+    <tr><td colspan='2' align='center'><input type="submit" value="Submit" ></td></tr> 
+</form>
+</table>
+
+<br />
+<br />
+<br />
+</div>
+{% endblock %}
+
+
+{% block rightcol %}
+<div class="subheadings">Fiesta Ads </div>
+{% for ad in ads_lst  %}
+<a href="{{ ad.url }}  ">{{ ad.title }}</a>
+<br />
+<p class="adimagepara"><img class="adimage" src="{{ media_url }}{{ ad.thumbnail2 }}" /> </p>
+ <p class="adbody">{{ ad.body }}</p>
+ <div class="adclear"><hr></div>
+{% endfor %}
+{% endblock %}
+
+
+
+

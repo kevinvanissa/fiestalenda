@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block middlecol %}
+
+{% if form.errors %}
+<p>Please check the form entry </p>
+{% endif %}
+<h2 align='center'> Contact Form </h2>
+<table align='center'>
+<form method="post" action="{% url fiesta.views.contact  %}">
+    {% csrf_token %}
+    {{ form.as_table }}
+<tr><td colspan='2' align='center'><input type="submit" value="Submit" ></td></tr> 
+</form>
+</table>          
+                {% endblock %}

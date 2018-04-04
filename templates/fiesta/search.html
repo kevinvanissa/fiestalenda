@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block leftcol %}
+<div class="subheadings">Quick Links</div>
+<b>List Events For :</b>
+<br />
+<br />
+<form action ="{% url fiesta.views.search_results %}" method ="get">
+    <input type="hidden" id="quickyear" name="quickyear" value={{ current_date_str.0 }} />
+    <input type="submit" value="This Year" class="quickbutton" />
+</form>
+<br />
+<form action ="{% url fiesta.views.search_results %}" method ="get">
+    <input type="hidden" id="quickmonth" name="quickmonth" value={{ current_date_str.1 }} />
+    <input type="submit" value="This Month" class="quickbutton" />
+</form>
+<br />
+<form action ="{% url fiesta.views.search_results %}" method ="get">
+    <input type="hidden" id="quickweek" name="quickweek" value={{ current_date_str.4 }} />
+    <input type="submit" value="This Week" class="quickbutton" />
+</form>
+<br />
+<form action ="{% url fiesta.views.search_results %}" method ="get">
+    <input type="hidden" id="quicktoday" name="quicktoday" value={{ current_date_str.2 }} />
+    <input type="submit" value="Today" class="quickbutton" />
+</form>
+<br />
+<form action ="{% url fiesta.views.search_results %}" method ="get">
+    <input type="hidden" id="quicktomorrow" name="quicktomorrow" value={{ current_date_str.3 }} />
+    <input type="submit" value="Tomorrow" class="quickbutton" />
+</form>
+
+{% endblock %}
+
+{% block middlecol %}
+<div class="centerdivs">
+<h2>Advance Search </h2>
+
+<form action="{% url fiesta.views.search_results %} "method="get" >
+    <table border='0' class="centertables">
+        <th colspan='2' align='center'>Search By Event Name </th>
+        <tr> <td>Name :</td><td> <input type ="text" size='20' id='title' name='title'> </td> </tr>
+    
+        <tr><td colspan='2' align='center'><input type="submit" value="Submit" /> </td></tr>
+        </table>
+</form>
+
+<h2>OR</h2>
+
+<form method='get' action="{% url fiesta.views.search_results  %}">
+    <table border='0' class="centertables">
+        <th colspan='2' align='center'> Filter Events </th>
+        <tr><td>Type:</td><td>
+    <select name='etype' id='etype'>
+    <option value=''>Type..</option>
+        {% for t_abbrev, t_name in type_lst  %}
+        <option value={{ t_abbrev }}>{{ t_name }}</option> 
+    {% endfor %}    
+    </select>
+    
+    </td></tr>
+    <tr><td> Parish: </td><td>
+    <select name='parish' id='parish'>
+    <option value=''>Parish:</option>
+    {% for p_abbrev, p_name  in parish_lst  %}
+    <option value={{ p_abbrev }}> {{ p_name }}</option>  
+    {% endfor %}
+    </select>
+    
+    </td></tr>
+    <tr><td>Cost:</td>
+    <td><select name='cost_range' id='cost_range'>
+    <option value=''>Cost$:</option>
+    
+    {% for c_abbrev, c_name  in cost_lst  %}
+    <option value={{ c_abbrev }}>{{ c_name }} </option> 
+    {% endfor %}
+    
+    </select>
+    </td></tr>
+    <tr><td>Date:</td><td>
+        <select name='year'>
+        <option value=''> Year:</option>
+        {% for yr  in year_lst %}
+        <option value={{ yr }}>{{ yr }} </option>
+    {% endfor %}
+    </select>
+
+<select name='month'>
+    <option value=''>Month:</option>
+    {% for mnth  in month_lst %}
+    <option value={{ mnth }}>{{ mnth }} </option>
+    {% endfor %}
+    </select>
+
+
+<select name='day'>
+    <option value=''>Day:</option>
+    {% for day  in day_lst %}
+    <option value={{ day }}>{{ day }} </option>
+    {% endfor %}
+    </select>
+</td>
+</tr>
+
+<tr><td colspan='2' align='center'>
+<input type='submit' value='Submit' id='evsub4' name='evsub4'></td></tr>
+ </table>
+</form>
+</div>
+{% endblock %}
+
+
+{% block rightcol %}
+<div class="subheadings">Fiesta Ads </div>
+{% for ad in ads_lst  %}
+<a href="{{ ad.url }}  ">{{ ad.title }}</a>
+<br />
+<p class="adimagepara"><img class="adimage" src="{{ media_url }}{{ ad.thumbnail2 }}" /> </p>
+ <p class="adbody">{{ ad.body }}</p>
+ <div class="adclear"><hr></div>
+{% endfor %}
+{% endblock %}
+
+
+
+

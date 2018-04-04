@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+
+{% block leftcol %}
+<div class="subheadings">Upcoming Events </div>
+
+{% for upcoming_event in upcoming_events   %}
+
+
+<a href="{% url fiesta.views.detail upcoming_event.event_start_date|date:"Y" upcoming_event.event_start_date|date:"m" upcoming_event.event_start_date|date:"d" upcoming_event.pk  %}" >{{ upcoming_event.title  }}</a> 
+<br />
+({{ upcoming_event.number_attending }} Attending)
+<br />
+{{ upcoming_event.event_start_date  }}
+<br />
+<br />
+{% endfor %}
+
+
+{% endblock %}
+
+
+
+{% block middlecol %}
+<h2>Events for  {{current_date }} </h2>
+
+{% for event in event_day  %}
+<a href="{% url fiesta.views.detail event.event_start_date|date:"Y" event.event_start_date|date:"m" event.event_start_date|date:"d" event.pk  %}" >{{ event.title  }}</a> 
+<br />
+{{event.description  }}
+<br />
+{{ event.event_start_date|date:"P" }}
+    <br />
+    <br />
+
+{% endfor %}
+
+
+
+{% endblock %}
+
+
+{% block rightcol %}
+<div class="subheadings">Fiesta Ads </div>
+
+{% for ad in ads_lst  %}
+<a href="{{ ad.url }}  ">{{ ad.title }}</a>
+<br />
+<p class="adimagepara"><img class="adimage" src="{{ media_url }}{{ ad.thumbnail2 }}" /> </p>
+ <p class="adbody">{{ ad.body }}</p>
+ <div class="adclear"><hr></div>
+{% endfor %}
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+
+
+{% block menu %}
+
+
+<style type="text/css">
+
+   /* 
+         .main { margin-left: 25px; margin-top: 30px; width: 700px; }
+        .event {
+            width: 86px; border: 1px solid #ccc; margin: 2px; padding: 3px;
+            height: 50px; background: #728FCE; cursor: pointer;
+           }
+        .current {
+            width: 86px; border: 1px solid #ccc; margin: 2px; padding: 3px;
+            height: 50px; background: #eeeec8; cursor: pointer;
+            }
+        .day {
+            width: 86px; border: 1px solid #ccc; margin: 2px; padding: 3px;
+            height: 50px; cursor: pointer;
+            }
+        .empty { width: 86px; border: 1px solid #fff; margin: 2px; padding: 3px; }
+        .day a { text-decoration: none; margin: 4px; }
+        .event a { text-decoration: none; margin: 4px; }
+        .clear { clear: both; }
+        .month { border: 3px solid #eee; padding: 8px; }
+        h4 { text-align: center; margin-left: -50px; }
+    */
+
+    
+        table.yearview th, table.yearview td {valign:top; font-size: 9pt;font-family: "Myriad Web",Verdana, Helvetica, Arial, sans-serif;}
+        .month_headings{text-align:center;font-weight:bold;}  
+        .headingrow{background:red;} 
+        table.maintable td {vertical-align:top;}
+        .event {
+            /* border: 1px solid #ccc; */ 
+            background: #728FCE; cursor: pointer;
+            width: 28px;
+            }
+        .subheadings{ background:#C0C0C0;text-align:center;margin-bottom:10px;font-weight:bold}
+        .current {
+            border: 1px solid #ccc; 
+            background: #90EE90; cursor: pointer;
+            width: 28px;
+            }
+        .day {
+            /*border: 1px solid #ccc;*/
+            cursor: pointer;
+            width: 28px;
+            }
+            .dayevents {
+            /*border: 1px solid #ccc;*/
+            border: 1px solid #ccc; 
+            background: yellow; cursor: pointer;
+            width: 28px;
+            }
+
+        .empty {/* border: 1px solid #fff;*/ width:28px; }
+        .day a { text-decoration: none; }
+        .event a { text-decoration: none; }
+        .clear { clear: both; }
+        .month {  border: 1px solid gray; height: 168px; }
+        h4 { text-align: center; margin-left: -50px; }
+    </style>
+
+{% endblock %}
+
+{% block leftcol %}
+<div class="subheadings">Upcoming Events</div> 
+
+
+
+
+
+{% for upcoming_event in upcoming_events   %}
+<a href="{% url fiesta.views.detail upcoming_event.event_start_date|date:"Y" upcoming_event.event_start_date|date:"m" upcoming_event.event_start_date|date:"d" upcoming_event.pk  %}" >{{ upcoming_event.title  }}</a> 
+<br />
+({{ upcoming_event.number_attending }} Attending)
+<br />
+{{ upcoming_event.event_start_date  }}
+<br />
+<hr>
+{% endfor %}
+
+
+{% endblock %}
+
+{% block middlecol %}
+
+<div class="main"> 
+    <table>
+        <tr>
+            <td><img src="{{ media_url }}images/icTwitter.png" /></td>
+            <td><img src="{{ media_url }}images/icFacebook.png" /></td>
+            <td><img src="{{ media_url }}images/icYouTube.png" /></td>
+        </tr>
+    </table>
+
+
+<table class="colorcodetable" style="text-align:center">
+<tr>
+<th>Colour</th>
+<th>Meaning</th>
+</tr>
+<tr>
+<td id="eventcode" >Blue</td>
+
+<td>Day with Events</td>
+</tr>
+<tr>
+<td id="todaycode">Green</td>
+<td>Today with no Events</td>
+</tr>
+<tr>
+<td id="todayeventcode">Yellow</td>
+<td>Today with Events </td>
+</tr>
+</table>
+
+
+
+
+<div align='center'>
+    <a href="{% url fiesta.views.main year_current  %}"> <b>{{ year_current }}</b> </a> |
+    <a href="{% url fiesta.views.main year_plus_one  %}"><b> {{ year_plus_one }}</b> </a> 
+</div>
+
+
+
+<table class="maintable">
+    <tr>
+{% for month, year_months_lst in year_months_lst.items %}
+
+        <td> 
+
+
+<div class="month">
+
+    <table class='yearview'>
+        <tr class="headingrow">
+
+            <td colspan="7" class="month_headings">
+        {% if month == 1 %}
+            January
+            {% endif %}
+
+        {% if month == 2 %}
+           February 
+            {% endif %}
+        {% if month == 3 %}
+            March 
+            {% endif %}
+
+         {% if month == 4 %}
+                    April
+                    {% endif %}
+          {% if month == 5 %}
+                   May 
+                    {% endif %}
+           {% if month == 6 %}
+                    June
+                    {% endif %}
+          {% if month == 7 %}
+                    July 
+                    {% endif %}
+        {% if month == 8 %}
+                    August 
+                    {% endif %}
+        {% if month == 9 %}
+                    September 
+                    {% endif %}
+        {% if month == 10 %}
+                    October 
+                    {% endif %}
+        {% if month == 11 %}
+                    November 
+                    {% endif %}
+        {% if month == 12 %}
+                   December 
+                            {% endif %}
+        </td>
+        </tr>
+        <tr>
+        <td class="empty">Su</td>
+        <td class="empty">Mo</td>
+        <td class="empty">Tu</td>
+        <td class="empty">We</td>
+        <td class="empty">Th</td>
+        <td class="empty">Fr</td>
+        <td class="empty">Sa</td>
+    </tr>
+
+    {% for week in year_months_lst %}
+    <tr>
+        {% for day, events, current in week %}
+        <td class ={% if day == 0 %}"empty"{% endif %}
+        {% if day != 0 and not current and not events %}"day"{% endif %}
+        {% if day != 0 and current and events %}"dayevents"{% endif %}
+        {% if day != 0 and current %}"current"{% endif %}
+        {% if day != 0 and events %}"event"{% endif %}
+        {% if day != 0 and events %}
+            onClick="parent.location='{% url fiesta.views.day year month day %}'"
+            onMouseOver="this.bgColor='#eeeeee';"
+            onMouseOut="this.bgColor='white';"
+            {% endif %} >
+            {% if day != 0 %}
+                {{ day }}
+             {% endif %}
+            </td>
+        {% endfor %}
+        </tr>
+    {% endfor %}
+    </table>
+</div>
+</td>
+{% if  month|divisibleby:"3"  %} 
+</tr><tr>
+{% endif %}
+
+
+
+{% endfor %}
+</table>
+
+
+    <div class="clear"></div>
+
+</div>
+
+{% endblock %}
+
+
+{% block rightcol %}
+<div class="subheadings">Fiesta Ads </div>
+
+{% for ad in ads_lst  %}
+<a href="{{ ad.url }}  ">{{ ad.title }}</a>
+<br />
+<p class="adimagepara"><img class="adimage" src="{{ media_url }}{{ ad.thumbnail2 }}" /> </p>
+ <p class="adbody">{{ ad.body }}</p>
+ <div class="adclear"><hr></div>
+{% endfor %}
+
+
+
+{% endblock %}
+
+
+
+

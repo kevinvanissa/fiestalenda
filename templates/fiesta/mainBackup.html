@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+
+{% block menu %}
+
+
+<style type="text/css">
+
+   /* 
+         .main { margin-left: 25px; margin-top: 30px; width: 700px; }
+        .event {
+            width: 86px; border: 1px solid #ccc; margin: 2px; padding: 3px;
+            height: 50px; background: #728FCE; cursor: pointer;
+           }
+        .current {
+            width: 86px; border: 1px solid #ccc; margin: 2px; padding: 3px;
+            height: 50px; background: #eeeec8; cursor: pointer;
+            }
+        .day {
+            width: 86px; border: 1px solid #ccc; margin: 2px; padding: 3px;
+            height: 50px; cursor: pointer;
+            }
+        .empty { width: 86px; border: 1px solid #fff; margin: 2px; padding: 3px; }
+        .day a { text-decoration: none; margin: 4px; }
+        .event a { text-decoration: none; margin: 4px; }
+        .clear { clear: both; }
+        .month { border: 3px solid #eee; padding: 8px; }
+        h4 { text-align: center; margin-left: -50px; }
+    */
+
+    
+        table.yearview th, table.yearview td {valign:top; font-size: 9pt;font-family: "Myriad Web",Verdana, Helvetica, Arial, sans-serif;}
+        .month_headings{text-align:center;font-weight:bold;}  
+        .headingrow{background:red;} 
+        table.maintable td {vertical-align:top;}
+        .event {
+            /* border: 1px solid #ccc; */ 
+            background: #728FCE; cursor: pointer;
+            width: 28px;
+            }
+        .subheadings{ background:#C0C0C0;text-align:center;margin-bottom:10px;font-weight:bold}
+        .current {
+            border: 1px solid #ccc; 
+            background: #90EE90; cursor: pointer;
+            width: 28px;
+            }
+        .day {
+            /*border: 1px solid #ccc;*/
+            cursor: pointer;
+            width: 28px;
+            }
+            .dayevents {
+            /*border: 1px solid #ccc;*/
+            border: 1px solid #ccc; 
+            background: yellow; cursor: pointer;
+            width: 28px;
+            }
+
+        .empty {/* border: 1px solid #fff;*/ width:28px; }
+        .day a { text-decoration: none; }
+        .event a { text-decoration: none; }
+        .clear { clear: both; }
+        .month {  border: 1px solid gray; height: 168px; }
+        h4 { text-align: center; margin-left: -50px; }
+    </style>
+
+{% endblock %}
+
+{% block leftcol %}
+
+{% endblock %}
+
+{% block middlecol %}
+
+<div class="main"> 
+    <table>
+        <tr>
+            <td><img src="{{ media_url }}images/icTwitter.png" /></td>
+            <td><img src="{{ media_url }}images/icFacebook.png" /></td>
+            <td><img src="{{ media_url }}images/icYouTube.png" /></td>
+        </tr>
+    </table>
+
+
+<table class="colorcodetable" style="text-align:center">
+<tr>
+<th>Colour</th>
+<th>Meaning</th>
+</tr>
+<tr>
+<td id="eventcode" >Blue</td>
+
+<td>Day with Events</td>
+</tr>
+<tr>
+<td id="todaycode">Green</td>
+<td>Today with no Events</td>
+</tr>
+<tr>
+<td id="todayeventcode">Yellow</td>
+<td>Today with Events </td>
+</tr>
+</table>
+
+
+<a href= "{% url cal.views.main year month "prev" %}">&lt;&lt; Prev</a>
+<a href= "{% url cal.views.main year month "next" %}">Next &gt;&gt;</a>
+
+<h4>{{ mname }} {{ year }}</h4>
+
+<div class="month">
+    <table>
+
+    <tr>
+        <td class="empty">Mon</td>
+        <td class="empty">Tue</td>
+        <td class="empty">Wed</td>
+        <td class="empty">Thu</td>
+        <td class="empty">Fri</td>
+        <td class="empty">Sat</td>
+        <td class="empty">Sun</td>
+    </tr>
+
+    {% for week in month_days %}
+        <tr>
+        {% for day, entries, current in week %}
+
+            <!-- TD style: empty | day | current; onClick handler and highlight  -->
+            <td class= {% if day == 0 %}"empty"{% endif %}
+            {% if day != 0 and not current %}"day"{% endif %}
+            {% if day != 0 and current %}"current"{% endif %}
+            {% if day != 0 %}
+                onClick="parent.location='{% url cal.views.day year month day %}'"
+                onMouseOver="this.bgColor='#eeeeee';"
+                onMouseOut="this.bgColor='white';"
+            {% endif %} >
+
+            <!-- Day number and entry snippets -->
+            {% if day != 0 %}
+                {{ day }}
+                {% for entry in entries %}
+                    <br />
+                    <b>{{ entry.creator }}</b>: {{ entry.short|safe }}
+                {% endfor %}
+            {% endif %}
+            </td>
+        {% endfor %}
+        </tr>
+    {% endfor %}
+    </table>
+
+    <div class="clear"></div>
+</div>
+
+
+
+
+
+
+
+
+
+    <div class="clear"></div>
+
+</div>
+
+{% endblock %}
+
+
+{% block rightcol %}
+
+
+{% endblock %}
+
+
+
+

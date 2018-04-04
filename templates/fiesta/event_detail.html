@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block jscripts %}
+<script src="http://maps.google.com/maps?file=api&v=2&key=ABQIAAAA-OjMeSxcIB1odexxOjsxJBT2yXp_ZAY8_ufC3CFXhHIE1NvwkxSilf7_juS-IX2Ov7hvgbNUjaKMPQ""
+      type="text/javascript"></script>
+
+
+<script type="text/javascript">
+
+    //<![CDATA[
+
+   var geocoder;
+   var map;
+
+   //var restaurant = "National Gallery of Jamaica";
+  //var address = "Ocean Blvd., Kingston, Jamaica";
+
+   // On page load, call this function
+
+   function load(address)
+   {
+       //alert(address)
+      // Create new map object
+      map = new GMap2(document.getElementById("map"));
+
+      // Create new geocoding object
+      geocoder = new GClientGeocoder();
+
+      // Retrieve location information, pass it to addToMap()
+      geocoder.getLocations(address, addToMap);
+   }
+
+   // This function adds the point to the map
+
+   function addToMap(response)
+   {
+      // Retrieve the object
+      place = response.Placemark[0];
+
+      // Retrieve the latitude and longitude
+      point = new GLatLng(place.Point.coordinates[1],
+                          place.Point.coordinates[0]);
+
+      // Center the map on this point
+      map.setCenter(point, 13);
+
+      // Create a marker
+      marker = new GMarker(point);
+
+      // Add the marker to map
+      map.addOverlay(marker);
+
+      // Add address information to marker
+      marker.openInfoWindowHtml(place.address);
+   }
+
+    //]]>
+    </script>
+
+{% endblock %}
+
+
+{% block leftcol %}
+<div class="subheadings">Upcoming Events </div>
+
+{% for upcoming_event in upcoming_events   %}
+
+<a href="{% url fiesta.views.detail upcoming_event.event_start_date|date:"Y" upcoming_event.event_start_date|date:"m" upcoming_event.event_start_date|date:"d" upcoming_event.pk  %}" >{{ upcoming_event.title  }}</a> 
+<br />
+({{ upcoming_event.number_attending }} Attending)
+<br />
+{{ upcoming_event.event_start_date  }}
+<br />
+<br />
+
+{% endfor %}
+
+
+{% endblock %}
+
+
+
+{% block middlecol %}
+<br />
+<a href="javascript:void(0);" onclick="displayImage()" ><img  src="{{ media_url }}{{event.thumbnail2 }}" border="0" /> </a>
+
+<div id='prev'>
+    <strong><a href="javascript:void(0);" onclick="closeDisplay(1);">Close</a></strong>
+    <br />
+<img src="{{ media_url }}{{ event.flyer }}" border="0" width="700" height="500" />
+<br /><strong><a href="javascript:void(0);" onclick="closeDisplay(1);">Close</a></strong>
+</div>
+
+
+<br />
+<h2> Event Details </h2>
+<form id="attend_form" name="attend_form" action="{% url fiesta.views.attend %}" method="post"> 
+    {% csrf_token %}
+    <input type="hidden" id="attendance" name="attendance" value="{{ event.pk }}">
+    <input type="hidden" id="year" name="year" value="{{ event.event_start_date|date:"Y" }}">
+    <input type="hidden" id="month" name="month" value="{{ event.event_start_date|date:"m" }}">
+    <input type="hidden" id="day" name="day" value="{{ event.event_start_date|date:"d" }}">
+    <input type="submit" value="I'm attending" />
+</form>
+({{ event.number_attending }} attending)
+<br />
+<br />
+<span class="eventheadings">Event Title:</span> {{ event.title }}
+<br />
+<br />
+<span class="eventheadings">Event Date:</span> {{ event.event_start_date }}
+<br />
+<br />
+<span class="eventheadings">Event Description:</span> {{ event.description }}
+<br />
+<br />
+<span class="eventheadings">Event Cost:</span> {{ event.cost }}
+<br />
+<br />
+<span class="eventheadings">Event Venue:</span> {{ event.venue }}
+<br />
+<br />
+<span class="eventheadings">Event Type:</span> {{ event.get_event_type_display }}
+<br />
+<br />
+<span class="eventheadings">Event Address:</span> {{ event.city_or_town }} 
+
+<br />
+<br />
+<span class="eventheadings">Event Parish:</span> {{ event.get_parish_display}}
+<br />
+<br />
+
+
+<a href="javascript:load('{{ev_address}}')">[Get Map Location]</a>
+
+<div id="map"></div>
+
+<span id="preve" style="display:none;"><strong><a href="javascript:void(0);" onclick="closeDisplay(1);">Close</a></strong><hr>
+<div id='eventimagew'></div>
+<hr><strong><a href="javascript:void(0);" onclick="closeDisplay(1);">Close</a></strong>
+</span>
+
+{% endblock %}
+
+
+{% block rightcol %}
+<div class="subheadings">Fiesta Ads </div>
+
+{% for ad in ads_lst  %}
+<a href="{{ ad.url }}  ">{{ ad.title }}</a>
+<br />
+<p class="adimagepara"><img class="adimage" src="{{ media_url }}{{ ad.thumbnail2 }}" /> </p>
+ <p class="adbody">{{ ad.body }}</p>
+ <div class="adclear"><hr></div>
+{% endfor %}
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
